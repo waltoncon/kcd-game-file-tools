@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+
+if [ $# -ne 1 ]; then
+    echo "Usage: $0 <relative_windows_pak_path>"
+    echo "Example: $0 Data/GameData.pak"
+    exit 1
+fi
+
+relative_windows_pak_path=$1
+
+if [[ ! "$relative_windows_pak_path" =~ \.pak$ ]]; then
+    echo "Error: The file must have a .pak extension."
+    exit 1
+fi
+
+if [ ! -f "./reqs/quickbms" ]; then
+  echo "Downloading QuickBMS..."
+  mkdir -p reqs
+  wget -q --show-progress https://aluigi.altervista.org/papers/quickbms_linux.zip -O reqs/quickbms.zip
+  unzip reqs/quickbms.zip -d reqs
+  chmod +x reqs/quickbms
+fi
+
+if [ ! -f "./reqs/pbo.bms" ]; then
+  echo "Downloading PBO script..."
+  mkdir -p reqs
+  wget -q --show-progress https://aluigi.altervista.org/bms/pbo.bms -O reqs/pbo.bms;
+fi
+
+path_no_ext=$(echo "$relative_windows_pak_path" | sed 's/\.pak$//')
+dir_name=$(dirname "$path_no_ext")
+base_name=$(basename "$path_no_ext")
+rel_path=$(echo "$relative_windows_pak_path" | sed 's/\//\\/g')
+win_path="C:\Program Files (x86)\Steam\steamapps\common\KingdomComeDeliverance\\$rel_path"
+wsl_path=$(wslpath -u "$win_path")
+
+archive_dir="archives/$dir_name"
+archive_file="$base_name.7z"
+archive_path="$archive_dir/$archive_file"
+
+output_path="output/$path_no_ext"
+
+if [ ! -e "$wsl_path" ]; then
+  echo "Error: The path $wsl_path does not exist."
+  exit 1
+fi
+
+echo "Extracting: \"$wsl_path\""
+echo "Archive: \"$archive_path\""
+echo "Output: \"$output_path\""
+
+if [ ! -f "$archive_path" ]; then
+  mkdir -p "$archive_dir"
+  ./reqs/quickbms -. -O "$archive_file" ./reqs/pbo.bms "$wsl_path" "$archive_dir"
+fi
+
+if [ ! -d "$output_path" ]; then
+  7z x "$archive_path" -o"$output_path"
+fi

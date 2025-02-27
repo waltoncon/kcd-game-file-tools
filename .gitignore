@@ -1,0 +1,9 @@
+output/*
+!output/.gitkeep
+output*/*
+!output*/.gitkeep
+archives/*
+!archives/.gitkeep
+reqs/*
+!reqs/.gitkeep
+.vscode

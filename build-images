@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+if [[ $# -ne 2 ]]; then
+  echo "Usage: $0 <directory> <filename_start>"
+  echo "Example: $0 output/Data/GameData/Libs/UI/Textures/Maps globalMap"
+  exit 1
+fi
+
+directory=$1
+filename_start=$2
+zip_base="star-citizen-texture-converter-v1-3.zip"
+conv_dir="reqs/star-citizen-texture-converter-v1-3"
+exe_path="$conv_dir/sctexconv_1.3.exe"
+temp_dir="$conv_dir/temp"
+config_path="$conv_dir/config.txt"
+
+if [[ ! -f "$exe_path" ]]; then
+  if [[ ! -f "$conv_dir.zip" ]]; then
+    echo "Error: The SCTextureConverter executable does not exist."
+    echo "Please download it from https://wiki.nexusmods.com/index.php/Textures_and_Images"
+    echo "and place $zip_base in the ./reqs directory."
+    exit 1
+  else
+    unzip "$conv_dir.zip" -d "reqs"
+  fi
+fi
+
+if [[ ! -d "$directory" ]]; then
+  echo "Directory does not exist."
+  exit 1
+fi
+
+cat <<EOF > "$config_path"
+verbose = false
+recursive = true
+clean = true
+merge_gloss = true
+format = png
+EOF
+
+rm -rf "$temp_dir"
+mkdir -p "$temp_dir"
+find "$directory" -type f -regex ".*/${filename_start}[a-zA-Z0-9_-]*_[0-9]+\(\.dds\.?[0-9]*\)?" | sort | while read -r file; do
+  cp "$file" "$temp_dir"
+done
+
+"$exe_path"
+
+output_dir="output-images"
+mkdir -p "$output_dir"
+
+find "$temp_dir" -type f -name "*.PNG" | sort | while read -r file; do
+  mv "$file" "$output_dir"
+done
