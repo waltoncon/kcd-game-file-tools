@@ -24,7 +24,7 @@ Extracts game files from KCD .pak files
 
 **Usage**
 
-```bash
+```
 ./extract <relative_windows_pak_path>
 ```
 
@@ -34,20 +34,37 @@ Extracts game files from KCD .pak files
 ./extract Data/GameData.pak
 ```
 
+### `list`
+
+List files within the game data
+
+**Usage**
+
+```
+./list <type>
+```
+
+**Example**
+
+```bash
+./list maps
+```
+
 ### `build-images`
 
 Takes `.dds` files, recombines them, then outputs `.png` images to `output-images`
 
 **Usage**
 
-```bash
-./build-images <directory> <filename_start>
+```
+./build-images <directory> <file> [file ...]
 ```
 
 **Example**
 
 ```bash
 ./build-images output/Data/GameData/Libs/UI/Textures/Maps globalMap
+./build-images output/Data/GameData/Libs/UI/Textures/Maps globalMap_{1..16}
 ```
 
 ### `combine-images`
@@ -56,14 +73,14 @@ Combines image tiles that were output by `build-images`.
 
 **Usage**
 
-```bash
-./combine-images <file_prefix> <lower_bound> <upper_bound> <grid>
+```
+./combine-images <grid> <file> [file ...]
 ```
 
 **Example**
 
 ```bash
-./combine-images globalMap 1 16 4x4
+./combine-images 4x4 globalMap_{1..16}
 ```
 
 ### `generate-map-tiles`
@@ -72,8 +89,8 @@ Convert a large image into map tiles for using with a mapping tool.
 
 **Usage**
 
-```bash
-./combine-images <image_file>
+```
+./combine-images <image_name>
 ```
 
 **Example**
