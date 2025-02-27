@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 
-if [[ $# -ne 2 ]]; then
-  echo "Usage: $0 <directory> <filename_start>"
+if [[ $# -lt 2 ]]; then
+  echo "Usage: $0 <directory> <file> [file ...]"
   echo "Example: $0 output/Data/GameData/Libs/UI/Textures/Maps globalMap"
+  echo "Example: $0 output/Data/GameData/Libs/UI/Textures/Maps globalMap_{1..16}"
+  echo "Example note: globalMap_0 is a thumbnail."
   exit 1
 fi
 
 directory=$1
-filename_start=$2
+shift
 zip_base="star-citizen-texture-converter-v1-3.zip"
 conv_dir="reqs/star-citizen-texture-converter-v1-3"
 exe_path="$conv_dir/sctexconv_1.3.exe"
@@ -40,8 +42,11 @@ EOF
 
 rm -rf "$temp_dir"
 mkdir -p "$temp_dir"
-find "$directory" -type f -regex ".*/${filename_start}[a-zA-Z0-9_-]*_[0-9]+\(\.dds\.?[0-9]*\)?" | sort | while read -r file; do
-  cp "$file" "$temp_dir"
+for file in "$@"; do
+    echo "Processing file: $file in directory: $directory"
+    find "$directory" -type f -regex ".*${file}\(_[0-9]\)?\.dds.*" | sort | while read -r f; do
+      cp "$f" "$temp_dir"
+    done
 done
 
 "$exe_path"
@@ -49,6 +54,8 @@ done
 output_dir="output-images"
 mkdir -p "$output_dir"
 
+echo "Files saved to $output_dir"
 find "$temp_dir" -type f -name "*.PNG" | sort | while read -r file; do
   mv "$file" "$output_dir"
+  echo " $output_dir/$(basename "$file")"
 done
