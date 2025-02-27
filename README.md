@@ -1,18 +1,19 @@
 # Kingdom Come: Deliverance game file tools
 
+- [Kingdom Come: Deliverance game file tools](#kingdom-come-deliverance-game-file-tools)
+  - [Setup](#setup)
+  - [Commands](#commands)
+    - [`extract`](#extract)
+    - [`list`](#list)
+    - [`build-images`](#build-images)
+    - [`combine-images`](#combine-images)
+    - [`generate-map-tiles`](#generate-map-tiles)
+  - [References and resources used](#references-and-resources-used)
+
+
 ## Setup
 
 This collection of tools has been built with WSL in mind. It accesses the Steam game directory for KCD to extract data. It also uses a `.exe` for building images ([`build-images`](#build-images)).
-
-## References and resources used
-
-- https://aluigi.altervista.org/quickbms.htm
-- https://wiki.nexusmods.com/index.php/Modding_guide_for_KCD
-- https://github.com/Madfish71/SCTextureConverter/tree/master/sctexconv
-- https://github.com/kingdomcomemap/kingdomcomemap.github.io/tree/master
-- https://gdal.org/en/latest/programs/gdal2tiles.html
-- https://wiki.nexusmods.com/index.php/Textures_and_Images
-- https://gdal.org/en/latest/programs/gdal2tiles.html
 
 ## Commands
 
@@ -98,3 +99,13 @@ Convert a large image into map tiles for using with a mapping tool.
 ```bash
 ./combine-images globalMap
 ```
+
+## References and resources used
+
+- https://aluigi.altervista.org/quickbms.htm
+- https://wiki.nexusmods.com/index.php/Modding_guide_for_KCD
+- https://github.com/Madfish71/SCTextureConverter/tree/master/sctexconv
+- https://github.com/kingdomcomemap/kingdomcomemap.github.io/tree/master
+- https://gdal.org/en/latest/programs/gdal2tiles.html
+- https://wiki.nexusmods.com/index.php/Textures_and_Images
+- https://gdal.org/en/latest/programs/gdal2tiles.html
