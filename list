@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+if [[ $# -lt 1 ]]; then
+  echo "Usage: $0 <type>"
+  echo "Example: $0 maps"
+  exit 1
+fi
+
+type=$1
+
+if [[ "$type" == "maps" ]]; then
+  directory="output/Data/GameData/Libs/UI/Textures/Maps"
+
+  if [[ ! -d "$directory" ]]; then
+    echo "Maps directory does not exist."
+    echo "Please run './extract Data/GameData.pak' first."
+    exit 1
+  fi
+
+  find "$directory" -type f -name "*.dds" ! -name "border.dds" ! -name "cloud_*" \
+  | sort \
+  | sed 's/\(_[0-9]*\)\?\.dds.*//' \
+  | uniq \
+  | while read -r file; do
+    basename "$file"
+  done
+fi
